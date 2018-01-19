@@ -11,21 +11,26 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class App: Application() {
 
-    override fun onCreate() {
-        super.onCreate()
-        instance = this
-        bittrexApi = Retrofit.Builder()
-                .baseUrl(BITTREX_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .build()
-    }
-
     companion object {
         lateinit var instance: App
             private set
         val BITTREX_URL = "https://bittrex.com/api/v1.1/"
-        lateinit var bittrexApi: Retrofit
+        lateinit var bittrexApi: BittrixApi
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+        instance = this
+        bittrexApi = buildRetrofit(BITTREX_URL).create(BittrixApi::class.java)
+
+    }
+
+    private fun buildRetrofit(url: String) : Retrofit {
+        return Retrofit.Builder()
+                .baseUrl(url)
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .build()
     }
 
 
