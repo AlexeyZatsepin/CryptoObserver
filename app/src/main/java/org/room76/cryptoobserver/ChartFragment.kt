@@ -55,7 +55,7 @@ class ChartFragment : Fragment() {
     }
 
     private fun populateChart(){
-        val response = App.krakenApi.getOlhc("ETHUSD", "10", null)
+        val response = App.krakenApi.getOlhc("ETHUSD", "5", null)
 
         response.enqueue(object : Callback<Model.OhlcKraken> {
             override fun onFailure(call: Call<Model.OhlcKraken>?, t: Throwable?) {
