@@ -3,6 +3,7 @@ package org.room76.cryptoobserver
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import org.room76.cryptoobserver.util.Utils
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -20,6 +21,8 @@ class MainActivity : AppCompatActivity() {
 
             override fun onResponse(call: Call<Model.OhlcKraken>?, response: Response<Model.OhlcKraken>?) {
                 Log.v("App", response?.body().toString())
+//                Utils.ohlcKrakenToChart(response!!.body())
+//                Log.v("App", "Hello world")
             }
         })
 
