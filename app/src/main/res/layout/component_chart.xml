@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:id="@+id/chart_card"
+    android:layout_width="match_parent"
+    android:layout_height="160dp"
+    android:layout_margin="@dimen/card_view_padding"
+    android:background="#343f57"
+    xmlns:williamchart="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+        <ImageButton
+            android:id="@+id/update"
+            android:layout_width="@dimen/card_toolbar_btn"
+            android:layout_height="@dimen/card_toolbar_btn"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_refresh" />
+
+        <com.db.chart.view.LineChartView
+            android:id="@+id/chart"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/update"
+            android:layout_marginBottom="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            williamchart:chart_axis="false"
+            williamchart:chart_axisBorderSpacing="15dp"
+            williamchart:chart_labelColor="#6a84c3" />
+</RelativeLayout>
