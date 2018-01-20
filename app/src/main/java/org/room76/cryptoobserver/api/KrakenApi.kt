@@ -1,8 +1,5 @@
 package org.room76.cryptoobserver.api
 
-import com.google.gson.annotations.Since
-import io.reactivex.Flowable
-import okhttp3.ResponseBody
 import org.room76.cryptoobserver.Model
 import retrofit2.Call
 import retrofit2.http.GET

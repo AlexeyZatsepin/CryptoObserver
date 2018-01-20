@@ -1,6 +1,5 @@
-package org.room76.cryptoobserver.util
+package org.room76.cryptoobserver
 
-import org.room76.cryptoobserver.Model
 import java.sql.Date
 import java.sql.Timestamp
 import java.util.*

@@ -16,6 +16,11 @@ import com.db.chart.tooltip.Tooltip
 import com.db.chart.util.Tools
 import com.db.chart.view.LineChartView
 import android.widget.ImageButton
+import android.widget.Toast
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.util.*
 
 /**
  * Created by Alexey on 1/20/18.
@@ -25,24 +30,22 @@ class ChartFragment : Fragment() {
     private lateinit var mChart: LineChartView
     private lateinit var mTip: Tooltip
     private lateinit var mUpdateBtn: ImageButton
-    private var firstStage: Boolean = false
     private val TAG = ChartFragment::class.java.name
 
-    private val mLabels = arrayOf("Jan", "Fev", "Mar", "Apr", "Jun", "May", "Jul", "Aug", "Sep")
-
-    private val mValues = arrayOf(
-            floatArrayOf(3.5f, 4.7f, 4.3f, 8f, 6.5f, 9.9f, 7f, 8.3f, 7.0f),
-            floatArrayOf(4.5f, 2.5f, 2.5f, 20f, 4.5f, 9.5f, 5f, 8.3f, 30.8f))
+//    private val mLabels = arrayOf("Jan", "Fev", "Mar", "Apr", "Jun", "May", "Jul", "Aug", "Sep")
+//
+//    private val mValues = arrayOf(
+//            floatArrayOf(3.5f, 4.7f, 4.3f, 8f, 6.5f, 9.9f, 7f, 8.3f, 7.0f),
+//            floatArrayOf(4.5f, 2.5f, 2.5f, 20f, 4.5f, 9.5f, 5f, 8.3f, 30.8f))
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragment_graphs,container)
         mChart = root.findViewById(R.id.chart)
         mUpdateBtn = root.findViewById(R.id.update)
         mUpdateBtn.setOnClickListener {
-            update(if (firstStage) mValues[0] else mValues[1])
-            firstStage = !firstStage
+//            update(if (firstStage) mValues[0] else mValues[1])
         }
-        show(mLabels, mValues[0])
+        populateChart()
         return root
     }
 
@@ -51,8 +54,38 @@ class ChartFragment : Fragment() {
         dismiss()
     }
 
+    private fun populateChart(){
+        val response = App.krakenApi.getOlhc("ETHUSD", "10", null)
+
+        response.enqueue(object : Callback<Model.OhlcKraken> {
+            override fun onFailure(call: Call<Model.OhlcKraken>?, t: Throwable?) {
+                Log.e(TAG, t!!.message)
+                Toast.makeText(context,"No network",Toast.LENGTH_LONG).show()
+            }
+
+            override fun onResponse(call: Call<Model.OhlcKraken>,
+                                    response: Response<Model.OhlcKraken>) {
+                if (response.isSuccessful){
+                    val chart = Utils.ohlcKrakenToChart(response.body())
+                    Log.i(TAG, "Response objects: " + chart.chartData.size)
+                    val labels: MutableList<String> = mutableListOf()
+                    val values: MutableList<Float> = mutableListOf()
+                    chart.chartData.forEach { it->
+                        run {
+                            labels.add(it.date.get(Calendar.DATE).toString())
+                            values.add(it.average)
+                        }
+                    }
+                    show(labels.toTypedArray(), values.toFloatArray())
+                } else {
+                    Log.e(TAG, response.errorBody().string())
+                    Toast.makeText(context,"Network error",Toast.LENGTH_LONG).show()
+                }
+            }
+        })
+    }
+
     private fun show(labels: Array<String>, values: FloatArray ) {
-        firstStage = false
         // Tooltip
         mTip = Tooltip(context, R.layout.tooltip, R.id.value)
 
@@ -77,7 +110,7 @@ class ChartFragment : Fragment() {
                 .setDotsColor(ContextCompat.getColor(context, R.color.chartColorNewItem))
                 .setThickness(4f)
                 .setDashed(floatArrayOf(10f, 10f))
-                .beginAt(mLabels.count()-2)
+                .beginAt(labels.count()-2)
         mChart.addData(dataset)
 
         dataset = LineSet(labels, values)
@@ -85,11 +118,11 @@ class ChartFragment : Fragment() {
                 .setFill(ContextCompat.getColor(context, R.color.chartBackground))
                 .setDotsColor(ContextCompat.getColor(context, R.color.colorAccent))
                 .setThickness(4f)
-                .endAt(mLabels.count()-1)
+                .endAt(labels.count()-1)
         mChart.addData(dataset)
 
         val chartAction = Runnable {
-            mTip.prepare(mChart.getEntriesArea(0)[3], mValues[0][3])
+            mTip.prepare(mChart.getEntriesArea(0)[3], values[3])
             mChart.showTooltip(mTip, true)
         }
 
@@ -103,6 +136,7 @@ class ChartFragment : Fragment() {
     }
 
     private fun update(values: FloatArray) {
+        populateChart()
         mChart.dismissAllTooltips()
         mChart.updateValues(0, values)
         mChart.updateValues(1, values)
