@@ -12,13 +12,13 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        var stream = App.krakenApi.getOlhc("ETHUSD", "5", null)
-        stream.enqueue(object : Callback<Model.OhlcKraken> {
-            override fun onFailure(call: Call<Model.OhlcKraken>?, t: Throwable?) {
+        var stream = App.bittrexApi.getCurrencies("usdt-btc")
+        stream.enqueue(object : Callback<Model.BittrixMarketSummary> {
+            override fun onFailure(call: Call<Model.BittrixMarketSummary>?, t: Throwable?) {
                 Log.v("App", t.toString())
             }
 
-            override fun onResponse(call: Call<Model.OhlcKraken>?, response: Response<Model.OhlcKraken>?) {
+            override fun onResponse(call: Call<Model.BittrixMarketSummary>?, response: Response<Model.BittrixMarketSummary>?) {
                 Log.v("App", response?.body().toString())
             }
         })

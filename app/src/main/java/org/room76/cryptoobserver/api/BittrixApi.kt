@@ -8,22 +8,6 @@ import retrofit2.http.Query
 
 interface BittrixApi {
 
-    @GET("public/getmarkets")
-    fun getMarkets(): Call<ResponseBody>
-
-    @GET("public/getcurrencies")
-    fun getCurrencies(): Call<Model.Currency>
-
-    @GET("public/getticker")
-    fun getTicker(): Call<ResponseBody>
-
-    @GET("public/getmarketsummaries")
-    fun getMarketSummaries(): Call<ResponseBody>
-
     @GET("public/getmarketsummary")
-    fun getMarketSummaries(@Query("market") market: String): Call<ResponseBody>
-
-    @GET("public/getmarkethistory")
-    fun getMarketHistory(@Query("market") market: String): Call<ResponseBody>
-
+    fun getCurrencies(@Query("market") market: String): Call<Model.BittrixMarketSummary>
 }

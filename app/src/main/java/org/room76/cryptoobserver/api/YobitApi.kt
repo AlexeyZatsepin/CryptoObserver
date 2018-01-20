@@ -11,9 +11,6 @@ interface YobitApi {
     @GET("public/getmarkets")
     fun getMarkets(): Call<ResponseBody>
 
-    @GET("public/getcurrencies")
-    fun getCurrencies(): Call<Model.Currency>
-
     @GET("public/getticker")
     fun getTicker(): Call<ResponseBody>
 
