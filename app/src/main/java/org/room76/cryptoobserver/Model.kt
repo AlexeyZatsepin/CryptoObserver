@@ -20,7 +20,7 @@ object Model {
 
     data class OhlcResultEthUsd(
             @SerializedName("XETHZUSD") var pair: List<List<String>>,
-            @SerializedName("last") var lastTransaction: Long
+            @SerializedName("last") var lastTransaction: Float
     )
 
     data class Chart(
@@ -31,6 +31,6 @@ object Model {
 
     data class ChartData(
            var date: Calendar,
-           var average: Long
+           var average: Float
     )
 }
