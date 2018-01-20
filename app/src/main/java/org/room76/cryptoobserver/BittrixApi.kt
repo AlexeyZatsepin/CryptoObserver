@@ -15,7 +15,7 @@ interface BittrixApi{
     fun getMarkets() : Flowable<ResponseBody>
 
     @GET("public/getcurrencies")
-    fun getCurrencies() : Flowable<ResponseBody>
+    fun getCurrencies() : Flowable<Model.Currency>
 
     @GET("public/getticker")
     fun getTicker() : Flowable<ResponseBody>

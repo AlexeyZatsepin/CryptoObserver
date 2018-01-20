@@ -10,7 +10,6 @@ import retrofit2.converter.gson.GsonConverterFactory
  */
 
 class App: Application() {
-
     companion object {
         lateinit var instance: App
             private set
@@ -22,7 +21,6 @@ class App: Application() {
         super.onCreate()
         instance = this
         bittrexApi = buildRetrofit(BITTREX_URL).create(BittrixApi::class.java)
-
     }
 
     private fun buildRetrofit(url: String) : Retrofit {
@@ -32,6 +30,4 @@ class App: Application() {
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build()
     }
-
-
 }
