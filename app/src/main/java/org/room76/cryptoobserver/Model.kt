@@ -23,7 +23,6 @@ object Model {
             @SerializedName("last") var lastTransaction: String
     )
 
-
     data class Chart(
             var exchangerName: String,
             var pair: String,
