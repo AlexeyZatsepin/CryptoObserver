@@ -12,16 +12,5 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        var stream = App.krakenApi.getOlhc("ETHUSD", "5", null)
-        stream.enqueue(object : Callback<Model.OhlcKraken> {
-            override fun onFailure(call: Call<Model.OhlcKraken>?, t: Throwable?) {
-                Log.v("App", t.toString())
-            }
-
-            override fun onResponse(call: Call<Model.OhlcKraken>?, response: Response<Model.OhlcKraken>?) {
-                Log.v("App", response?.body().toString())
-            }
-        })
-
     }
 }

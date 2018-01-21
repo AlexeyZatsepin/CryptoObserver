@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">CryptoObserver</string>
+
+    <dimen name="card_toolbar_btn">40dp</dimen>
+
+    <dimen name="card_view_padding">1dp</dimen>
+    <dimen name="card_view_roundcorner">0dp</dimen>
 </resources>
