@@ -32,18 +32,12 @@ class ChartFragment : Fragment() {
     private lateinit var mUpdateBtn: ImageButton
     private val TAG = ChartFragment::class.java.name
 
-//    private val mLabels = arrayOf("Jan", "Fev", "Mar", "Apr", "Jun", "May", "Jul", "Aug", "Sep")
-//
-//    private val mValues = arrayOf(
-//            floatArrayOf(3.5f, 4.7f, 4.3f, 8f, 6.5f, 9.9f, 7f, 8.3f, 7.0f),
-//            floatArrayOf(4.5f, 2.5f, 2.5f, 20f, 4.5f, 9.5f, 5f, 8.3f, 30.8f))
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragment_graphs,container)
         mChart = root.findViewById(R.id.chart)
         mUpdateBtn = root.findViewById(R.id.update)
         mUpdateBtn.setOnClickListener {
-//            update(if (firstStage) mValues[0] else mValues[1])
+            updateChart()
         }
         populateChart()
         return root
@@ -55,32 +49,17 @@ class ChartFragment : Fragment() {
     }
 
     private fun populateChart(){
-        val response = App.krakenApi.getOlhc("ETHUSD", "5", null)
-
-        response.enqueue(object : Callback<Model.OhlcKraken> {
-            override fun onFailure(call: Call<Model.OhlcKraken>?, t: Throwable?) {
-                Log.e(TAG, t!!.message)
-                Toast.makeText(context,"No network",Toast.LENGTH_LONG).show()
-            }
-
-            override fun onResponse(call: Call<Model.OhlcKraken>,
-                                    response: Response<Model.OhlcKraken>) {
-                if (response.isSuccessful){
-                    val chart = Utils.ohlcKrakenToChart(response.body())
-                    Log.i(TAG, "Response objects: " + chart.chartData.size)
-                    val labels: MutableList<String> = mutableListOf()
-                    val values: MutableList<Float> = mutableListOf()
-                    chart.chartData.forEach { it->
-                        run {
-                            labels.add(it.date.get(Calendar.DATE).toString())
-                            values.add(it.average)
-                        }
+        requestChartData("ETHUSD", "1440", object : Utils.Action<Model.Chart> {
+            override fun action(data: Model.Chart) {
+                val labels: MutableList<String> = mutableListOf()
+                val values: MutableList<Float> = mutableListOf()
+                data.chartData.forEach { it->
+                    run {
+                        labels.add(it.date.get(Calendar.DATE).toString())
+                        values.add(it.average)
                     }
-                    show(labels.toTypedArray(), values.toFloatArray())
-                } else {
-                    Log.e(TAG, response.errorBody().string())
-                    Toast.makeText(context,"Network error",Toast.LENGTH_LONG).show()
                 }
+                show(labels.toTypedArray(), values.toFloatArray())
             }
         })
     }
@@ -135,13 +114,18 @@ class ChartFragment : Fragment() {
                         .withEndAction(chartAction))
     }
 
-    private fun update(values: FloatArray) {
-        populateChart()
-        mChart.dismissAllTooltips()
-        mChart.updateValues(0, values)
-        mChart.updateValues(1, values)
-        mChart.chartAnimation.withEndAction({ Log.v(TAG,"chart updated")})
-        mChart.notifyDataUpdate()
+    private fun updateChart() {
+        requestChartData("ETHUSD", "1440", object : Utils.Action<Model.Chart> {
+            override fun action(data: Model.Chart) {
+                val values: MutableList<Float> = mutableListOf()
+                data.chartData.forEach { it -> values.add(it.average) }
+                mChart.dismissAllTooltips()
+                mChart.updateValues(0, values.toFloatArray())
+                mChart.updateValues(1, values.toFloatArray())
+                mChart.chartAnimation.withEndAction({ Log.v(TAG,"chart updated")})
+                mChart.notifyDataUpdate()
+            }
+        })
     }
 
 
@@ -149,5 +133,28 @@ class ChartFragment : Fragment() {
         mChart.dismissAllTooltips()
         mChart.dismiss(Animation().setInterpolator(BounceInterpolator())
                 .withEndAction({Log.v(TAG,"animation dissmised")}))
+    }
+
+    private fun requestChartData(pair: String, interval:String, action: Utils.Action<Model.Chart>) {
+        val response = App.krakenApi.getOlhc(pair, interval, null)
+
+        response.enqueue(object : Callback<Model.OhlcKraken> {
+            override fun onFailure(call: Call<Model.OhlcKraken>?, t: Throwable?) {
+                Log.e(TAG, t!!.message)
+                Toast.makeText(context,"No network",Toast.LENGTH_LONG).show()
+            }
+
+            override fun onResponse(call: Call<Model.OhlcKraken>,
+                                    response: Response<Model.OhlcKraken>) {
+                if (response.isSuccessful){
+                    val chart = Utils.ohlcKrakenToChart(response.body())
+                    Log.i(TAG, "Response objects: " + chart.chartData.size)
+                    action.action(chart)
+                } else {
+                    Log.e(TAG, response.errorBody().string())
+                    Toast.makeText(context,"Network error",Toast.LENGTH_LONG).show()
+                }
+            }
+        })
     }
 }

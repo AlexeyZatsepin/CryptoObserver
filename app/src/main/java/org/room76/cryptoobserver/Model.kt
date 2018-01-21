@@ -19,7 +19,7 @@ object Model {
             @SerializedName("result") var body: OhlcResultEthUsd)
 
     data class OhlcResultEthUsd(
-            @SerializedName("XETHZUSD") var pair: List<List<Object>>,
+            @SerializedName("XETHZUSD") var pair: List<List<Any>>,
             @SerializedName("last") var lastTransaction: String
     )
 

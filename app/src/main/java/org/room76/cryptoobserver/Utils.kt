@@ -7,6 +7,10 @@ import java.util.*
 
 object Utils {
 
+    interface Action<in T> {
+        fun action(data:T)
+    }
+
     fun ohlcKrakenToChart(values: Model.OhlcKraken): Model.Chart {
         val chartData = ArrayList<Model.ChartData>()
         for (p in values.body.pair) {

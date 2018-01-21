@@ -1,7 +1,6 @@
 package org.room76.cryptoobserver
 
 import android.app.Application
-import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import org.room76.cryptoobserver.api.BittrixApi
 import org.room76.cryptoobserver.api.KrakenApi
 import retrofit2.Retrofit
