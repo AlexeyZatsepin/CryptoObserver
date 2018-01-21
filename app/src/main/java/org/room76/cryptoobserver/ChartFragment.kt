@@ -33,7 +33,7 @@ class ChartFragment : Fragment() {
     private val TAG = ChartFragment::class.java.name
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val root = inflater.inflate(R.layout.fragment_graphs,container)
+        val root = inflater.inflate(R.layout.fragment_chart,container)
         mChart = root.findViewById(R.id.chart)
         mUpdateBtn = root.findViewById(R.id.update)
         mUpdateBtn.setOnClickListener {
@@ -69,7 +69,7 @@ class ChartFragment : Fragment() {
         mTip = Tooltip(context, R.layout.tooltip, R.id.value)
 
         mTip.setVerticalAlignment(Tooltip.Alignment.BOTTOM_TOP)
-        mTip.setDimensions(Tools.fromDpToPx(58f).toInt(), Tools.fromDpToPx(25f).toInt())
+        mTip.setDimensions(Tools.fromDpToPx(70f).toInt(), Tools.fromDpToPx(25f).toInt())
 
         mTip.setEnterAnimation(PropertyValuesHolder.ofFloat(View.ALPHA, 1f),
                 PropertyValuesHolder.ofFloat(View.SCALE_Y, 1f),
