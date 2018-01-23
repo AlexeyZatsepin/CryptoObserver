@@ -6,6 +6,8 @@ import java.lang.IllegalArgumentException
 import java.util.*
 
 object Model {
+    data class Profit(var isProfit: Boolean,
+                      var profit: String)
     data class KrakenEthMarketSummary(
             @SerializedName("erorr") var error: List<String>,
             @SerializedName("result") var result: KrakenEthResult

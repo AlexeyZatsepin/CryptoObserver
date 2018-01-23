@@ -94,22 +94,24 @@ class StatsFragment : Fragment() {
             }
     }
 
-    fun isProfit(fromMarket: MarketCurrency, market: MarketCurrency): Boolean {
+    fun isProfit(fromMarket: MarketCurrency, market: MarketCurrency): Model.Profit {
         var profit = (fromMarket.currency - fromMarket.currency * fromMarket.market.getFromFee())
         profit = profit / market.currency - market.market.getToFee() * profit
-        return profit > 1
+        return Model.Profit(profit > 1, Math.round(Math.abs(profit)).toString())
     }
 
-    fun updateText(profit: Boolean, fromMarket: MarketCurrency, market: MarketCurrency) {
-        if (profit) {
+    fun updateText(profit: Model.Profit, fromMarket: MarketCurrency, market: MarketCurrency) {
+        if (profit.isProfit) {
             val s = String
-                    .format("You will make profit transferring %s from exchanger %s to exchanger %s \n",
+                    .format("You will earn: %s$ transferring %s from exchanger %s to exchanger %s \n",
+                            profit.profit,
                             mCurrencySelector.selectedItem.toString(),
                             fromMarket.market.getName(), market.market.getName())
             mTextView.text = mTextView.text.toString() + s
         } else {
             val s = String
-                    .format("You will make no profit transferring %s from exchanger %s to exchanger %s \n",
+                    .format("You will lose %s$ transferring %s from exchanger %s to exchanger %s \n",
+                            profit.profit,
                             mCurrencySelector.selectedItem.toString(),
                             fromMarket.market.getName(), market.market.getName())
             mTextView.text = mTextView.text.toString() + s
