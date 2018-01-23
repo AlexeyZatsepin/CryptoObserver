@@ -1,11 +1,24 @@
 package org.room76.cryptoobserver
 
 import com.google.gson.annotations.SerializedName
+import okhttp3.internal.Util
+import retrofit2.Call
 import retrofit2.Callback
+import retrofit2.Response
 import java.lang.IllegalArgumentException
 import java.util.*
 
 object Model {
+    data class KrakenEthMarketSummary(
+            @SerializedName("erorr") var error: List<String>,
+            @SerializedName("result") var result: KrakenEthResult
+    )
+    data class KrakenEthResult(
+            @SerializedName("XETHZUSD") var xethzusd: List<KrakenXETHZUSD>
+    )
+    data class KrakenXETHZUSD(
+            @SerializedName("asks")var asks: List<String>
+    )
     data class BittrixMarketSummary(
             @SerializedName("success") var success: Boolean,
             @SerializedName("message") var message: String,
@@ -52,7 +65,6 @@ object Model {
         fun getName(): String
         fun getToFee(): Double
         fun getFromFee(): Double
-        fun updateCurrencyCall(coin: String, call: Callback<Currency>): Double
     }
 
 
@@ -69,12 +81,14 @@ object Model {
             return 0.2
         }
 
-        override fun updateCurrencyCall(coin: String, call: Callback<Currency>): Double {
-            return 0.0
+        fun updateCurrencyCall(coin: String, call: Callback<Any>) {
+
         }
     }
 
     class KrakenMarket : Market {
+
+        val coinsNames = Utils.krakenCoins()
 
         override fun getName(): String {
             return "Kraken"
@@ -88,14 +102,19 @@ object Model {
             return 0.0
         }
 
-        override fun updateCurrencyCall(coin: String, call: Callback<Currency>): Double {
-            return 0.0
+        fun updateCurrencyCall(coin: String, call: Callback<KrakenEthMarketSummary>) {
+            val pair = coinsNames.get(coin)
+            if (pair == null) {
+                throw IllegalArgumentException("There are no" + coin + " Bittrex market")
+            }
+            App.krakenApi.getCurrencies(pair).enqueue(call)
         }
     }
 
     class BittrexMarket : Market {
+        val coinsNames = Utils.bittrixCoins()
         override fun getName(): String {
-            return "Bittrex"
+            return "Bittrix"
         }
 
         override fun getToFee(): Double {
@@ -106,26 +125,12 @@ object Model {
             return 0.25
         }
 
-        override fun updateCurrencyCall(coin: String,
-                                        call: Callback<Currency>): Double {
-
-            return 0.0
-        }
-    }
-
-    class MarketFactory() {
-
-        fun getMarketForName(name: String): Market {
-            if (name.equals("Bittrix")) {
-                return BittrexMarket()
+        fun updateCurrencyCall(coin: String, call: Callback<BittrixMarketSummary>) {
+            val pair = coinsNames.get(coin)
+            if (pair == null) {
+                throw IllegalArgumentException("There are no" + coin + " Bittrex market")
             }
-            if (name.equals("Yobit")) {
-                return YobitMarket()
-            }
-            if (name.equals("Kraken")) {
-                return KrakenMarket()
-            }
-            throw IllegalArgumentException("No market with name " + name)
+            App.bittrexApi.getCurrencies(pair).enqueue(call)
         }
     }
 }
