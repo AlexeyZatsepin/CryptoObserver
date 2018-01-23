@@ -61,7 +61,7 @@ class StatsFragment : Fragment() {
             Toast.makeText(context, "Calculate result and set it to result view",
                     Toast.LENGTH_SHORT).show()
             responeses = ArrayList()
-            mTextView.text = "Result: "
+            mTextView.text = "Result: \n"
             val selectedMarket = getMarketForName(mExchangeSelector.selectedItem.toString())
             val coin = mCurrencySelector.selectedItem.toString()
             for (ex in exchanges) {
@@ -153,13 +153,15 @@ class StatsFragment : Fragment() {
         }
         if (name.equals("Kraken")) {
             market as Model.KrakenMarket
-            market.updateCurrencyCall(coin, object : Callback<Model.KrakenEthMarketSummary> {
-                override fun onFailure(call: Call<Model.KrakenEthMarketSummary>?, t: Throwable?) {
+            market.updateCurrencyCall(coin, object : Callback<Model.OhlcKraken> {
+                override fun onFailure(call: Call<Model.OhlcKraken>?, t: Throwable?) {
 
                 }
 
-                override fun onResponse(call: Call<Model.KrakenEthMarketSummary>?, response: Response<Model.KrakenEthMarketSummary>?) {
-                    val currency = response!!.body().result.xethzusd[0].asks[0].toDouble()
+                override fun onResponse(call: Call<Model.OhlcKraken>?, response: Response<Model.OhlcKraken>?) {
+                    val currency = (response!!.body().body.pair.last()[2].toString().toDouble()
+                    + response.body().body.pair.last()[3].toString().toDouble()) / 2
+
 
                     updateView(MarketCurrency(market, currency,
                             fromMarket))
@@ -171,7 +173,7 @@ class StatsFragment : Fragment() {
     }
 
     fun isSelectedMarket(market: Model.Market): Boolean {
-        return market.toString().equals(mExchangeSelector.selectedItem.toString())
+        return market.getName().equals(mExchangeSelector.selectedItem.toString())
     }
 }
 

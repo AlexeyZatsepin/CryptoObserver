@@ -1,10 +1,7 @@
 package org.room76.cryptoobserver
 
 import com.google.gson.annotations.SerializedName
-import okhttp3.internal.Util
-import retrofit2.Call
 import retrofit2.Callback
-import retrofit2.Response
 import java.lang.IllegalArgumentException
 import java.util.*
 
@@ -102,12 +99,12 @@ object Model {
             return 0.0
         }
 
-        fun updateCurrencyCall(coin: String, call: Callback<KrakenEthMarketSummary>) {
+        fun updateCurrencyCall(coin: String, call: Callback<OhlcKraken>) {
             val pair = coinsNames.get(coin)
             if (pair == null) {
                 throw IllegalArgumentException("There are no" + coin + " Bittrex market")
             }
-            App.krakenApi.getCurrencies(pair).enqueue(call)
+            App.krakenApi.getOlhc(pair, null, null).enqueue(call)
         }
     }
 

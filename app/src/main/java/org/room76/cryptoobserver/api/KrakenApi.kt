@@ -11,5 +11,5 @@ interface KrakenApi {
                 @Query("since") since: String?): Call<Model.OhlcKraken>
 
     @GET("public/Depth")
-    fun getCurrencies(@Query("pair") pair: String): Call<Model.KrakenEthMarketSummary>
+    fun getCurrencies(@Query("pair") pair: String): Call<Any>
 }
