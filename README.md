@@ -6,6 +6,7 @@ Test task in int20h
 
 
 Screenshot:
-![Image of App](https://github.com/AlexeyZatsepin/CryptoObserver/tree/master/screenshots/main.png)
+![Image of App](https://github.com/AlexeyZatsepin/CryptoObserver/blob/master/screenshots/main.png)
+
 
 
