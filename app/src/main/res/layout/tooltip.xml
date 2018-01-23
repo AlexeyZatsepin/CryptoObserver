@@ -22,5 +22,5 @@
         android:layout_centerVertical="true"
         android:layout_toEndOf="@+id/value"
         android:layout_toRightOf="@+id/value"
-        android:src="@drawable/ic_refresh" />
+        android:src="@drawable/ic_currency_usd" />
 </RelativeLayout>

@@ -6,14 +6,6 @@
     xmlns:williamchart="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-        <TextView
-            android:id="@+id/tv"
-            android:layout_margin="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@android:color/white"
-            android:text="ETC/USD" />
-
         <ImageButton
             android:id="@+id/update"
             android:layout_width="@dimen/card_toolbar_btn"
@@ -28,8 +20,6 @@
             android:layout_height="match_parent"
             android:layout_below="@id/update"
             android:layout_marginBottom="15dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
             williamchart:chart_axis="false"
             williamchart:chart_axisBorderSpacing="15dp"
             williamchart:chart_labelColor="#6a84c3" />

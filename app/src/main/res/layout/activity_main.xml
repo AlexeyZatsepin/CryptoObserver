@@ -2,11 +2,20 @@
 <LinearLayout
     android:id="@+id/container"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation= "vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/chartBackgroundFill">
+
     <fragment
-        android:id="@+id/details_fragment"
+        android:id="@+id/chart_fragment"
         class="org.room76.cryptoobserver.ChartFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="wrap_content"/>
+
+    <fragment
+        android:id="@+id/details_fragment"
+        class="org.room76.cryptoobserver.StatsFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 </LinearLayout>
